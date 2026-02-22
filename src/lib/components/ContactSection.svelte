@@ -28,8 +28,7 @@
 	let sent = false;
 	let error = '';
 
-	const BOT_TOKEN = import.meta.env.VITE_TG_BOT_TOKEN || '';
-	const CHAT_ID = import.meta.env.VITE_TG_CHAT_ID || '';
+	const WORKER_URL = 'https://tg-contact-proxy.edwardnikonor.workers.dev';
 
 	function onBudgetInput(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -47,30 +46,13 @@
 
 		sending = true;
 
-		const lines = [
-			`📋 *New Project Request*`,
-			``,
-			`*Project:* ${projectName}`,
-			`*Name:* ${fullName}`,
-			`*Email:* ${email}`,
-			telegram ? `*Telegram:* ${telegram}` : '',
-			whatsapp ? `*WhatsApp:* ${whatsapp}` : '',
-			``,
-			`*Description:*`,
-			description,
-			``,
-			`*Budget:* $${budget}`,
-			`*Timeline:* ${timeline}`
-		].filter(Boolean).join('\n');
-
 		try {
-			const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+			const res = await fetch(WORKER_URL, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					chat_id: CHAT_ID,
-					text: lines,
-					parse_mode: 'Markdown'
+					projectName, fullName, email, telegram,
+					whatsapp, description, budget, timeline
 				})
 			});
 
