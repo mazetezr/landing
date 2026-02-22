@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { soundEnabled } from '$lib/stores/sound';
 	import { resumeAudio, playGearHum, playGearExplode, playTick } from '$lib/utils/audio';
 
 	export let onComplete: () => void = () => {};
@@ -69,10 +70,12 @@
 			mouseX = e.clientX;
 			mouseY = e.clientY;
 		};
-		const handleInteraction = () => {
+		const handleInteraction = async () => {
 			if (!audioResumed) {
 				audioResumed = true;
-				resumeAudio();
+				await resumeAudio();
+				// Small delay so no queued sounds burst out
+				setTimeout(() => soundEnabled.set(true), 100);
 			}
 		};
 		window.addEventListener('mousemove', handleMouseMove);
