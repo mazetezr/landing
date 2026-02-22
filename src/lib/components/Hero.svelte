@@ -390,7 +390,7 @@
 
 	<div class="hero-content" style="opacity: {Math.max(0, 1 - currentScrollProgress * 5)}">
 		<div class="hero-tags">
-			{#each ['Databases', '·', 'Websites', '·', 'Automation', '·', 'Bots', '·', 'API'] as word}
+			{#each ['Backend', '·', 'Infrastructure', '·', 'Databases', '·', 'Websites', '·', 'Automation', '·', 'Bots', '·', 'API'] as word}
 				{#if word === '·'}
 					<span class="tag-sep">·</span>
 				{:else}
