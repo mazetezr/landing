@@ -5,7 +5,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	kit: {
 		paths: {
-			base: '/edward-landing.github.io'
+			base: '/landing'
 		},
 		adapter: adapter({
 			pages: 'build',
