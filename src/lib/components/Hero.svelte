@@ -5,6 +5,7 @@
 	import * as THREE from 'three';
 	import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 	import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+	import { base } from '$app/paths';
 	import { lerp } from '$lib/utils/math';
 
 	let canvas: HTMLCanvasElement;
@@ -96,7 +97,7 @@
 		const circleTexture = createCircleTexture();
 
 		const loader = new FontLoader();
-		loader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
+		loader.load(`${base}/fonts/helvetiker_regular.typeface.json`, (font) => {
 			const title = 'EDWARD';
 			const letterSpacing = 0.54;
 			const textSize = 3.96;
