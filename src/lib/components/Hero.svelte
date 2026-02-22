@@ -99,8 +99,9 @@
 		const loader = new FontLoader();
 		loader.load(`${base}/fonts/helvetiker_regular.typeface.json`, (font) => {
 			const title = 'EDWARD';
-			const letterSpacing = 0.54;
-			const textSize = 3.96;
+			const isMobile = window.innerWidth < 768;
+			const letterSpacing = isMobile ? 0.3 : 0.54;
+			const textSize = isMobile ? 2.2 : 3.96;
 			const extrudeDepth = 0.9;
 
 			interface LetterData { startIdx: number; count: number; }

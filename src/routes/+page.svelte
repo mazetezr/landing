@@ -31,8 +31,17 @@
 		let targetProgress = 0;
 
 		const handleWheel = (e: WheelEvent) => {
+			// When contact form is showing, only intercept scroll-up to go back
+			if (showContact) {
+				if (e.deltaY < 0) {
+					e.preventDefault();
+					targetProgress = Math.max(0, targetProgress - 0.02);
+					scrollProgress.set(targetProgress);
+				}
+				return;
+			}
+
 			e.preventDefault();
-			// Normalize deltaY across browsers/trackpads
 			const raw = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
 			const delta = Math.sign(raw) * Math.min(Math.abs(raw) * 0.0003, 0.03);
 			targetProgress = Math.max(0, Math.min(1, targetProgress + delta));
@@ -47,6 +56,9 @@
 		};
 
 		const handleTouchMove = (e: TouchEvent) => {
+			// When contact form is showing, let native scroll work
+			if (showContact) return;
+
 			e.preventDefault();
 			const diff = touchStartY - e.touches[0].clientY;
 			touchStartY = e.touches[0].clientY;

@@ -1,15 +1,30 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { cursorPos } from '$lib/stores/cursor';
 
 	let x = 0, y = 0;
 	let visible = false;
-	let animFrame: number;
 	let isTouchDevice = false;
 
 	onMount(() => {
 		isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-		if (isTouchDevice) return;
+
+		if (isTouchDevice) {
+			// No visual cursor on touch, but update cursorPos for particle interaction
+			const handleTouchMove = (e: TouchEvent) => {
+				const t = e.touches[0];
+				cursorPos.set({ x: t.clientX, y: t.clientY });
+			};
+			const handleTouchEnd = () => {
+				cursorPos.set({ x: -9999, y: -9999 });
+			};
+			window.addEventListener('touchmove', handleTouchMove, { passive: true });
+			window.addEventListener('touchend', handleTouchEnd);
+			return () => {
+				window.removeEventListener('touchmove', handleTouchMove);
+				window.removeEventListener('touchend', handleTouchEnd);
+			};
+		}
 
 		const handleMouseMove = (e: MouseEvent) => {
 			x = e.clientX;
