@@ -188,7 +188,7 @@
 
 			const grad = ctx.createLinearGradient(tx, ty, hx, hy);
 			grad.addColorStop(0, `rgba(0, 212, 255, 0)`);
-			grad.addColorStop(1, `rgba(0, 212, 255, ${0.3 * p.life})`);
+			grad.addColorStop(1, `rgba(0, 212, 255, ${0.6 * p.life})`);
 
 			ctx.beginPath();
 			ctx.moveTo(tx, ty);
