@@ -81,44 +81,44 @@
 		<form class="form" bind:this={formEl} on:submit|preventDefault={handleSubmit}>
 			<div class="row">
 				<label class="field">
-					<span class="label">Project Name <span class="req">*</span></span>
+					<span class="label">{#each 'Project Name ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="req">*</span></span>
 					<input type="text" bind:value={projectName} placeholder="e.g. Trading Bot" />
 				</label>
 				<label class="field">
-					<span class="label">Full Name <span class="req">*</span></span>
+					<span class="label">{#each 'Full Name ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="req">*</span></span>
 					<input type="text" bind:value={fullName} placeholder="John Doe" />
 				</label>
 			</div>
 
 			<div class="row">
 				<label class="field">
-					<span class="label">Email <span class="req">*</span></span>
+					<span class="label">{#each 'Email ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="req">*</span></span>
 					<input type="email" bind:value={email} placeholder="john@example.com" />
 				</label>
 				<label class="field">
-					<span class="label">Telegram <span class="opt">(optional)</span></span>
+					<span class="label">{#each 'Telegram ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="opt">(optional)</span></span>
 					<input type="text" bind:value={telegram} placeholder="@username" />
 				</label>
 			</div>
 
 			<div class="row">
 				<label class="field">
-					<span class="label">WhatsApp <span class="opt">(optional)</span></span>
+					<span class="label">{#each 'WhatsApp ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="opt">(optional)</span></span>
 					<input type="text" bind:value={whatsapp} placeholder="+1234567890" />
 				</label>
 				<label class="field">
-					<span class="label">Budget ($) <span class="req">*</span></span>
+					<span class="label">{#each 'Budget ($) ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="req">*</span></span>
 					<input type="text" inputmode="numeric" value={budget} on:input={onBudgetInput} placeholder="5000" />
 				</label>
 			</div>
 
 			<label class="field full">
-				<span class="label">Project Description <span class="req">*</span></span>
+				<span class="label">{#each 'Project Description ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="req">*</span></span>
 				<textarea bind:value={description} rows="4" placeholder="Describe what you need built..."></textarea>
 			</label>
 
 			<label class="field full">
-				<span class="label">Timeline <span class="req">*</span></span>
+				<span class="label">{#each 'Timeline ' as char}<!-- svelte-ignore a11y_no_static_element_interactions --><span class="label-char" on:mouseenter={(e) => e.currentTarget.classList.add('hop')} on:animationend={(e) => e.currentTarget.classList.remove('hop')}>{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="req">*</span></span>
 				<input type="text" bind:value={timeline} placeholder="e.g. 2 weeks, 1 month, flexible" />
 			</label>
 
@@ -185,6 +185,23 @@
 		color: var(--text-secondary);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+
+	.label-char {
+		display: inline-block;
+		transition: color 0.2s ease;
+		cursor: default;
+	}
+
+	:global(.label-char.hop) {
+		animation: labelHop 0.35s ease;
+		color: var(--text-primary);
+	}
+
+	@keyframes labelHop {
+		0%, 100% { transform: translateY(0); }
+		40% { transform: translateY(-4px); }
+		70% { transform: translateY(-1px); }
 	}
 
 	.req {

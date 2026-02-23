@@ -106,7 +106,7 @@
 
 			if (hovering) {
 				hoverTime += isMobile ? 0.032 : 0.016;
-				rotSpeed = 0.003 + hoverTime * 0.008;
+				rotSpeed = 0.003 + hoverTime * (isMobile ? 0.02 : 0.008);
 			} else if (!exploded) {
 				hoverTime = Math.max(0, hoverTime - 0.03);
 				rotSpeed = 0.003 + hoverTime * 0.008;
