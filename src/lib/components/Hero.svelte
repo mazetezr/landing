@@ -83,10 +83,14 @@
 	}
 
 	onMount(() => {
+		// Use window dimensions as fallback — canvas.clientWidth can be 0 before layout
+		const initW = canvas.clientWidth || window.innerWidth;
+		const initH = canvas.clientHeight || window.innerHeight;
+
 		const scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+		const camera = new THREE.PerspectiveCamera(60, initW / initH, 0.1, 1000);
 		const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-		renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+		renderer.setSize(initW, initH);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 		const baseCamZ = 20;
@@ -98,6 +102,13 @@
 
 		const loader = new FontLoader();
 		loader.load(`${base}/fonts/helvetiker_regular.typeface.json`, (font) => {
+			// Force correct sizing now that layout is guaranteed
+			const realW = canvas.clientWidth || window.innerWidth;
+			const realH = canvas.clientHeight || window.innerHeight;
+			camera.aspect = realW / realH;
+			camera.updateProjectionMatrix();
+			renderer.setSize(realW, realH);
+
 			const title = 'EDWARD';
 			const isMobile = window.innerWidth < 768;
 			const letterSpacing = isMobile ? 0.3 : 0.54;
@@ -283,14 +294,18 @@
 					mouseInited = true;
 				}
 
-				// Cursor velocity
+				// Cursor velocity — clamp to prevent explosive impulses on fast swipes
 				mouseVel.subVectors(mouse3D, prevMouse3D);
 				smoothVel.lerp(mouseVel, 0.3);
 				const cursorSpeed = smoothVel.length();
-
+				const maxSpeed = 0.8;
+				if (cursorSpeed > maxSpeed) {
+					smoothVel.multiplyScalar(maxSpeed / cursorSpeed);
+				}
+				const clampedSpeed = Math.min(cursorSpeed, maxSpeed);
 
 				const hitRadius = 1.4;
-				const isMoving = cursorSpeed > 0.005;
+				const isMoving = clampedSpeed > 0.005;
 
 				for (let i = 0; i < totalParticles; i++) {
 					const i3 = i * 3;
@@ -313,7 +328,7 @@
 						if (dist < hitRadius) {
 							const t = dist / hitRadius;
 							const proximity = (1 - t) * (1 - t);
-							const strength = Math.min(cursorSpeed, 0.92) * proximity;
+							const strength = clampedSpeed * proximity;
 							velocities[i3] += smoothVel.x * strength * 0.615;
 							velocities[i3 + 1] += smoothVel.y * strength * 0.615;
 
