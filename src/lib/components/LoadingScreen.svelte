@@ -64,11 +64,19 @@
 
 		const HOVER_RADIUS = 90;
 		const TARGET_TIME = 5;
+		const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 		let audioResumed = false;
 		const handleMouseMove = (e: MouseEvent) => {
 			mouseX = e.clientX;
 			mouseY = e.clientY;
+		};
+		const handleTouchMove = (e: TouchEvent) => {
+			const t = e.touches[0];
+			if (t) {
+				mouseX = t.clientX;
+				mouseY = t.clientY;
+			}
 		};
 		const handleInteraction = async () => {
 			if (!audioResumed) {
@@ -79,6 +87,7 @@
 			}
 		};
 		window.addEventListener('mousemove', handleMouseMove);
+		window.addEventListener('touchmove', handleTouchMove);
 		window.addEventListener('mousedown', handleInteraction);
 		window.addEventListener('touchstart', handleInteraction);
 
@@ -93,7 +102,7 @@
 			ctx.fillRect(0, 0, w, h);
 
 			const dist = Math.hypot(mouseX - cx, mouseY - cy);
-			const hovering = dist < HOVER_RADIUS && !exploded;
+			const hovering = isMobile ? !exploded : (dist < HOVER_RADIUS && !exploded);
 
 			if (hovering) {
 				hoverTime += 0.016;
@@ -247,10 +256,10 @@
 			// Hint text
 			if (!exploded) {
 				hintOpacity = hovering ? Math.max(0, hintOpacity - 0.01) : Math.min(1, hintOpacity + 0.01);
-				if (hintOpacity > 0.01) {
+				if (hintOpacity > 0.01 && !isMobile) {
 					ctx.font = '13px "JetBrains Mono", "Fira Code", monospace';
 					ctx.textAlign = 'center';
-					ctx.fillStyle = `rgba(107, 107, 128, ${hintOpacity.toFixed(2)})`;
+					ctx.fillStyle = `rgba(0, 212, 255, ${(hintOpacity * 0.7).toFixed(2)})`;
 					ctx.fillText('hold cursor over to enter', cx, cy + OUTER_R + 45);
 				}
 			}
@@ -262,6 +271,7 @@
 
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
+			window.removeEventListener('touchmove', handleTouchMove);
 			window.removeEventListener('mousedown', handleInteraction);
 			window.removeEventListener('touchstart', handleInteraction);
 			cancelAnimationFrame(animFrame);

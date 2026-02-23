@@ -481,7 +481,8 @@
 	.scroll-indicator span {
 		font-family: var(--font-mono);
 		font-size: 13px;
-		color: var(--text-muted);
+		color: var(--aurora-cyan);
+		opacity: 0.7;
 		letter-spacing: 0.1em;
 	}
 
